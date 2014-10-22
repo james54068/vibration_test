@@ -131,15 +131,6 @@ char checksum(char* buffer)
     return exor;
 }
 
-void DELAY_ms(int ms)
-{
-    delay_buf=0;
-    while(delay_buf < ms)
-    {
-
-    }
-}
-
 
 static const float cosTable[260] = {
   0.999698817729949950f, 1.000000000000000000f, 0.999698817729949950f,

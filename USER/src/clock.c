@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include "clock.h"
 
+static __IO uint32_t TimingDelay;
+
 ErrorStatus HSEStartUpStatus;
 
 void RCC_Configuration(void)
@@ -71,3 +73,31 @@ void RCC_Configuration(void)
 							, ENABLE);
 	
 }
+
+
+ void SysTick_cfg(void)
+{
+	printf("%d\r\n",SystemCoreClock);
+  if (SysTick_Config(SystemCoreClock/1000))
+  { 
+    /* Capture error */ 
+    while (1);
+  }
+}
+
+ void SysTick_Handler(void)
+{
+   if (TimingDelay != 0x00)
+ 	{ 
+    	TimingDelay--;
+  	}
+}
+
+void sys_Delay(__IO uint32_t nTime)
+{ 
+  TimingDelay = nTime;
+
+  while(TimingDelay != 0);
+
+}
+

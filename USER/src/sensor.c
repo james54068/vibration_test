@@ -4,7 +4,7 @@ int 			i=0;
 float 			acc_offset[3];
 float 			gyro_offset[3];
 
-imu_buffer   	mpu6050_buf;
+imu_buffer   	mpu9150_buf;
 
 
 volatile int16_t ACC_FIFO[3][256] = {{0}};
@@ -23,15 +23,15 @@ void initial_AccGyro()
 	for(int i=0;i<MagCorrect_time;i++)
 	{
 
-	MPU6050_GetRawAccelGyro(mpu6050_buf.buff,mpu6050_buf.magne);
+	MPU6050_GetRawAccelGyro(mpu9150_buf.buff,mpu9150_buf.magne);
 	//delay(10);
 
-		acc_offset[0] = (s16)MoveAve_WMA((s16)mpu6050_buf.buff[0], ACC_FIFO[0], MagCorrect_Ave);
-		acc_offset[1] = (s16)MoveAve_WMA((s16)mpu6050_buf.buff[1], ACC_FIFO[1], MagCorrect_Ave);
-		acc_offset[2] = (s16)MoveAve_WMA((s16)mpu6050_buf.buff[2], ACC_FIFO[2], MagCorrect_Ave);
-		gyro_offset[0] = (s16)MoveAve_WMA((s16)mpu6050_buf.buff[3], GYR_FIFO[0], MagCorrect_Ave);
-		gyro_offset[1] = (s16)MoveAve_WMA((s16)mpu6050_buf.buff[4], GYR_FIFO[1], MagCorrect_Ave);
-		gyro_offset[2] = (s16)MoveAve_WMA((s16)mpu6050_buf.buff[5], GYR_FIFO[2], MagCorrect_Ave);
+		acc_offset[0] = (s16)MoveAve_WMA((s16)mpu9150_buf.buff[0], ACC_FIFO[0], MagCorrect_Ave);
+		acc_offset[1] = (s16)MoveAve_WMA((s16)mpu9150_buf.buff[1], ACC_FIFO[1], MagCorrect_Ave);
+		acc_offset[2] = (s16)MoveAve_WMA((s16)mpu9150_buf.buff[2], ACC_FIFO[2], MagCorrect_Ave);
+		gyro_offset[0] = (s16)MoveAve_WMA((s16)mpu9150_buf.buff[3], GYR_FIFO[0], MagCorrect_Ave);
+		gyro_offset[1] = (s16)MoveAve_WMA((s16)mpu9150_buf.buff[4], GYR_FIFO[1], MagCorrect_Ave);
+		gyro_offset[2] = (s16)MoveAve_WMA((s16)mpu9150_buf.buff[5], GYR_FIFO[2], MagCorrect_Ave);
 
 		acc_offset[0] = (acc_offset[0]/8192.0);//16384//8192
 		acc_offset[1] = (acc_offset[1]/8192.0);//16384//8192
@@ -56,23 +56,20 @@ void initial_AccGyro()
 void mpu_9150_data()
 {
 	uint8_t 	tmp;
-	MPU6050_GetRawAccelGyro(mpu6050_buf.buff,mpu6050_buf.magne);
+	MPU6050_GetRawAccelGyro(mpu9150_buf.buff,mpu9150_buf.magne);
 	//delay(10);
-	acc.x = (mpu6050_buf.buff[0]/8192.0);//16384//8192
-	acc.y = (mpu6050_buf.buff[1]/8192.0);//16384//8192
-	acc.z = (mpu6050_buf.buff[2]/8192.0);//16384//8192
-	gyr.x = (mpu6050_buf.buff[3]/16.4);//16384//8192
-	gyr.y = (mpu6050_buf.buff[4]/16.4);//16384//8192
-	gyr.z = (mpu6050_buf.buff[5]/16.4);//16384//8192
+	acc9150.x = (mpu9150_buf.buff[0]/8192.0);//16384//8192
+	acc9150.y = (mpu9150_buf.buff[1]/8192.0);//16384//8192
+	acc9150.z = (mpu9150_buf.buff[2]/8192.0);//16384//8192
+	gyr9150.x = (mpu9150_buf.buff[3]/16.4);//16384//8192
+	gyr9150.y = (mpu9150_buf.buff[4]/16.4);//16384//8192
+	gyr9150.z = (mpu9150_buf.buff[5]/16.4);//16384//8192
 		
-
-	acc.x -= acc_offset[0] ;//16384//8192
-	acc.y -= acc_offset[1] ;//16384//8192
-	acc.z += acc_offset[2] ;//16384//8192
-	gyr.x -= gyro_offset[0] ;//16384//8192
-	gyr.y -= gyro_offset[1] ;//16384//8192
-	gyr.z -= gyro_offset[2] ;//16384//8192
+	acc9150.x -= acc_offset[0] ;//16384//8192
+	acc9150.y -= acc_offset[1] ;//16384//8192
+	acc9150.z += acc_offset[2] ;//16384//8192
+	gyr9150.x -= gyro_offset[0] ;//16384//8192
+	gyr9150.y -= gyro_offset[1] ;//16384//8192
+	gyr9150.z -= gyro_offset[2] ;//16384//8192
 		
-	//delay(10);
-
 }

@@ -9,6 +9,7 @@
 
 void Initial_MCU(void)
 {	
+	
 	RCC_Configuration();	// Enable Clock
 	GPIO_Configuration();	// Define Indicator LED
  	

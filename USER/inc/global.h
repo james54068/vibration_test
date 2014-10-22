@@ -19,8 +19,8 @@ typedef struct {
 
 /*for imu*/
 extern  u8      		correction_flag;
-extern  sensor_acc		acc;
-extern  sensor_gyro		gyr;
+extern  sensor_acc		acc9150;
+extern  sensor_gyro		gyr9150;
 
 
 /*initial*/

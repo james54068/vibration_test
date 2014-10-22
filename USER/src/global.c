@@ -5,8 +5,8 @@
 
 
 u8      		correction_flag = 0;
-sensor_acc		acc;
-sensor_gyro		gyr;
+sensor_acc		acc9150;
+sensor_gyro		gyr9150;
 
 
 /*initial*/

@@ -21,33 +21,18 @@ void TIMER_Configuration(void)
 						   																																																						
 }
 
-
-
 void TIM4_IRQHandler(void)
 {
 	if(TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) 
 	{	
 		mpu_9150_data();
-		printf("%f %f %f %f %f %f\r\n",acc.x,acc.y,acc.z,gyr.x,gyr.y,gyr.z);		  			
-
+		printf("%f %f %f\r\n",acc9150.x,acc9150.y,acc9150.z);	
+		gpio_toggle( GPIOB, GPIO_Pin_8);	  			
 		
 		TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
 	}
 }
 
-/*100hz*/
-void TIM3_IRQHandler(void)
-{	
-	if(TIM_GetITStatus(TIM5, TIM_IT_Update) != RESET) 
-	{	/*
-		if(initial_flag == 1){		  				
-			mpu_9150_data();
-			printf("%f %f %f %f %f %f %f %f %f\r\n",acc.x,acc.y,acc.z,gyr.x,gyr.y,gyr.z);
-			TIM_ClearITPendingBit(TIM5, TIM_IT_Update);
-		}
-		*/
-	}
-}
 
 
 
