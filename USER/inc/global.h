@@ -5,6 +5,8 @@
 #include "stm32f10x.h"
 #include "stm32f10x_conf.h"
 
+typedef enum {OFF = 0, ON = !RESET} Switch;
+
 typedef struct {
 	float 		x;
 	float 		y;
@@ -25,6 +27,11 @@ extern  sensor_gyro		gyr9150;
 
 /*initial*/
 extern  u8   			initial_flag;
+/*rpm*/
+extern  bool   			exti_flag;
+extern  int16_t 		exti_count;
+extern  float			rpm;
+
 
 
 

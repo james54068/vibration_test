@@ -6,7 +6,7 @@
 //*********************************************************
 #include <stdlib.h>
 #include "clock.h"
-
+#include "config.h"
 static __IO uint32_t TimingDelay;
 
 ErrorStatus HSEStartUpStatus;
@@ -86,7 +86,11 @@ void RCC_Configuration(void)
 }
 
  void SysTick_Handler(void)
-{
+{   
+   gpio_toggle( GPIOB, GPIO_Pin_9); 
+   
+   exti_count ++;
+
    if (TimingDelay != 0x00)
  	{ 
     	TimingDelay--;
