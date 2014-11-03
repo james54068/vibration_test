@@ -32,6 +32,8 @@ extern  bool   			exti_flag;
 extern  int16_t 		exti_count;
 extern  float			rpm;
 
+extern  char   			string[100];
+
 
 
 

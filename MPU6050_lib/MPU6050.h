@@ -444,7 +444,7 @@ void MPU6050_Config(uint8_t source) ;
 // WHO_AM_I register
 uint8_t MPU6050_GetDeviceID();
 
-void MPU6050_GetRawAccelGyro(s16* AccelGyro,s16* Magne) ;
+void MPU9150_GetRawAccelGyro(s16* AccelGyro,s16* Magne) ;
 
 
 void MPU6050_WriteBits(uint8_t slaveAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data);

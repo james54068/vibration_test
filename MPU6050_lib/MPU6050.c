@@ -51,11 +51,11 @@ void MPU6050_Initialize()
     delay(100);
     MPU6050_SetClockSource(MPU6050_CLOCK_PLL_XGYRO);
     delay(100);
-    MPU6050_Config(0x03);
+    MPU6050_Config(0x00);
     delay(100);
     MPU6050_SetFullScaleGyroRange(MPU6050_GYRO_FS_2000);
     delay(100);
-    MPU6050_SetFullScaleAccelRange(MPU6050_ACCEL_FS_4);
+    MPU6050_SetFullScaleAccelRange(MPU6050_ACCEL_FS_16);
     delay(100);   
     MPU6050_enablemagnetometer();
     delay(100);
@@ -308,14 +308,14 @@ void MPU6050_SetSleepModeStatus(FunctionalState NewState)
  * @param AccelGyro 16-bit signed integer array of length 6
  * @see MPU6050_RA_ACCEL_XOUT_H
  */
-void MPU6050_GetRawAccelGyro(s16* AccelGyro,s16* Magne) 
+void MPU9150_GetRawAccelGyro(s16* AccelGyro,s16* Magne) 
 {
     u8 tmpBuffer_6050[14];
-    u8 tmpBuffer_8975[6];
+    //u8 tmpBuffer_8975[6];
     u8 ReadData = 0x00; 
     MPU6050_I2C_BufferRead(MPU6050_DEFAULT_ADDRESS, tmpBuffer_6050, MPU6050_RA_ACCEL_XOUT_H, 14); 
-    MPU6050_ReadBit(AK8975_I2C_ADDR, AK8975_ST1, 0, &ReadData);
-    
+    //MPU6050_ReadBit(AK8975_I2C_ADDR, AK8975_ST1, 0, &ReadData);
+/*    
     if (ReadData == 1) {
     MPU6050_I2C_BufferRead(AK8975_I2C_ADDR, tmpBuffer_8975,AK8975_HXL, 6);
     MPU6050_WriteBits(AK8975_I2C_ADDR,AK8975_CNTL, 3,4, 0x01);  // Set Single Measurement Mode
@@ -328,8 +328,8 @@ void MPU6050_GetRawAccelGyro(s16* AccelGyro,s16* Magne)
     for(int i=4; i<7; i++)
       AccelGyro[i-1]=((s16)((u16)tmpBuffer_6050[2*i] << 8) + tmpBuffer_6050[2*i+1]);
     /* Get magne rate */
-    for(int i=0; i<3; i++)
-      Magne[i]=((s16)((u16)tmpBuffer_8975[2*i+1] << 8) + tmpBuffer_8975[2*i]);
+    //for(int i=0; i<3; i++)
+      //Magne[i]=((s16)((u16)tmpBuffer_8975[2*i+1] << 8) + tmpBuffer_8975[2*i]);
   
 }  
 
@@ -417,6 +417,8 @@ void MPU6050_ReadBit(uint8_t slaveAddr, uint8_t regAddr, uint8_t bitNum, uint8_t
 */
 void MPU6050_I2C_Init()
 {
+
+
   I2C_InitTypeDef  I2C_InitStructure;
   GPIO_InitTypeDef GPIO_InitStructure;
 

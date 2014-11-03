@@ -10,7 +10,8 @@ typedef struct {
 	float       magn_correct[3];
 }imu_buffer;
 
-void 	initial_AccGyro();
+void    initial_AccGyro(int16_t n);
 void 	mpu_9150_data();
+void 	mpu_6050_data();
 
 #endif

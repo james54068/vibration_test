@@ -16,6 +16,10 @@ bool  			exti_flag = FALSE;
 int16_t 		exti_count = 0;
 float			rpm = 0;
 
+/*DMA*/
+char   			string[100];
+
+
 
 
 

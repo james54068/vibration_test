@@ -2,6 +2,7 @@
 #include "config.h"
 
 
+
 void TIMER_Configuration(void)
 {
   
@@ -16,17 +17,39 @@ void TIMER_Configuration(void)
 	TIM_Cmd(TIM4, ENABLE);
 	TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);        				
 	
-	/*72MHz/((999+1)*(72))=100Hz*/	
+	/*72MHz/((999+1)*(72))=1000Hz  100*/	
 
 						   																																																						
 }
 
 void TIM4_IRQHandler(void)
 {
+	char buff[10];
+	int i=0;
 	if(TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) 
 	{	
+		gpio_toggle( GPIOB, GPIO_Pin_8);
+		
 		mpu_9150_data();
-		printf("%f %f %f\r\n",acc9150.x,acc9150.y,acc9150.z);	
+
+		sprintf(buff,"%f  ",acc9150.x);
+		strcat(string,buff);	
+		sprintf(buff,"%f  ",acc9150.y);
+		strcat(string,buff);
+		sprintf(buff,"%f  ",acc9150.z);
+		strcat(string,buff);
+		sprintf(buff,"%f  ",acc9150.x);
+		strcat(string,buff);
+		sprintf(buff,"%f  ",acc9150.y);
+		strcat(string,buff);
+		sprintf(buff,"%f  ",acc9150.z);
+		strcat(string,buff);
+		sprintf(buff,"%f  ",rpm);
+		strcat(string,buff);
+		strcat(string,"\r\n");
+
+		send_string(string);	
+		memset(string,0,100);
 		gpio_toggle( GPIOB, GPIO_Pin_8);	  			
 		
 		TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
