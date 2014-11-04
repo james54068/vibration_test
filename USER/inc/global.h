@@ -2,6 +2,7 @@
 #define __global_H
 
 #include "config.h"
+#include "sensor.h"
 #include "stm32f10x.h"
 #include "stm32f10x_conf.h"
 
@@ -32,9 +33,12 @@ extern  bool   			exti_flag;
 extern  int16_t 		exti_count;
 extern  float			rpm;
 
+/*DMA*/
+/*usart*/
 extern  char   			string[100];
-
-
+/*i2c*/
+extern  u8 				I2C1_Rx_Buffer[14];
+extern	imu_buffer   	mpu9150_buf;
 
 
 #endif

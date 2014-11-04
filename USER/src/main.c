@@ -6,6 +6,7 @@
 {
 	/*Initial STM32*/
 	Initial_MCU();
+	EXTI_Configuration();
 	initial_AccGyro(1);
 	TIMER_Configuration();
 	USART_DMACmd(USART1, USART_DMAReq_Tx, ENABLE);

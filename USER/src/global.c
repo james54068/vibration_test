@@ -17,7 +17,13 @@ int16_t 		exti_count = 0;
 float			rpm = 0;
 
 /*DMA*/
+/*usart*/
 char   			string[100];
+/*i2c*/
+u8 				I2C1_Rx_Buffer[14];
+imu_buffer   	mpu9150_buf;
+
+
 
 
 

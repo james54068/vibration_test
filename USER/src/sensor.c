@@ -1,4 +1,5 @@
 #include "config.h"
+#include "sensor.h"
 
 int 			i=0;
 float 			acc9150_offset[3];
@@ -6,14 +7,11 @@ float 			gyro9150_offset[3];
 float 			acc6050_offset[3];
 float 			gyro6050_offset[3];
 
-imu_buffer   	mpu9150_buf;
-
-
 volatile int16_t ACC_FIFO[3][256] = {{0}};
 volatile int16_t GYR_FIFO[3][256] = {{0}};
 
 
-#define MagCorrect_time   100
+#define MagCorrect_time   1000
 #define MagCorrect_Ave    10
 
 
@@ -27,7 +25,7 @@ void initial_AccGyro(int16_t n)
 	for(int i=0;i<MagCorrect_time;i++)
 	{
 
-	MPU9150_GetRawAccelGyro(mpu9150_buf.buff,mpu9150_buf.magne);
+	//MPU9150_GetRawAccelGyro(mpu9150_buf.buff,mpu9150_buf.magne);
 
 		acc_offset[0] = (s16)MoveAve_WMA((s16)mpu9150_buf.buff[0], ACC_FIFO[0], MagCorrect_Ave);
 		acc_offset[1] = (s16)MoveAve_WMA((s16)mpu9150_buf.buff[1], ACC_FIFO[1], MagCorrect_Ave);
@@ -45,6 +43,7 @@ void initial_AccGyro(int16_t n)
 
 		printf("acc_x,%f,acc_y,%f,acc_z,%f,gyr_x,%f,gyr_y,%f,gyr_z,%f\r\n",
 			acc_offset[0],acc_offset[1],acc_offset[2],gyro_offset[0],gyro_offset[1],gyro_offset[2]);
+		
 	}
 
 	switch (n)
@@ -82,8 +81,8 @@ void initial_AccGyro(int16_t n)
 
 void mpu_9150_data()
 {
-	uint8_t 	tmp;
-	MPU9150_GetRawAccelGyro(mpu9150_buf.buff,mpu9150_buf.magne);
+	//uint8_t 	tmp;
+	//MPU9150_GetRawAccelGyro(mpu9150_buf.buff,mpu9150_buf.magne);
 	//delay(10);
 	
 	acc9150.x = (mpu9150_buf.buff[0]/2048.0);//16384//8192

@@ -86,9 +86,7 @@ void RCC_Configuration(void)
 }
 
  void SysTick_Handler(void)
-{   
-   gpio_toggle( GPIOB, GPIO_Pin_9); 
-   
+{    
    exti_count ++;
 
    if (TimingDelay != 0x00)
