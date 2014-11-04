@@ -78,7 +78,7 @@ void RCC_Configuration(void)
  void SysTick_cfg(void)
 {
 	printf("%d\r\n",SystemCoreClock);
-  if (SysTick_Config(SystemCoreClock/1000))
+  if (SysTick_Config(SystemCoreClock/1000000))
   { 
     /* Capture error */ 
     while (1);
@@ -87,7 +87,7 @@ void RCC_Configuration(void)
 
  void SysTick_Handler(void)
 {    
-   exti_count ++;
+   systic_count ++;
 
    if (TimingDelay != 0x00)
  	{ 

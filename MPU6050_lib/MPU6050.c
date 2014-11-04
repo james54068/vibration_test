@@ -32,6 +32,7 @@ THE SOFTWARE.
 #include "MPU6050.h"
 #include "stm32f10x_i2c.h"
 #include "printf.h"
+#include "config.h"
 #include <stdlib.h>
 
 /** @defgroup MPU6050_Library
@@ -47,21 +48,61 @@ THE SOFTWARE.
  */
 void MPU6050_Initialize() 
 {
+  
     MPU6050_SetSleepModeStatus(DISABLE);
+    //MPU6050_WriteBit(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_DEVICE_RESET_BIT, DISABLE);
     delay(100);
     MPU6050_SetClockSource(MPU6050_CLOCK_PLL_XGYRO);
     delay(100);
-    MPU6050_Config(0x00);
+    MPU6050_Config(0x01);
     delay(100);
+    //MPU6050_WriteBits(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_SMPLRT_DIV, 7, 8, 0x00);
+    //delay(100);
     MPU6050_SetFullScaleGyroRange(MPU6050_GYRO_FS_2000);
     delay(100);
     MPU6050_SetFullScaleAccelRange(MPU6050_ACCEL_FS_16);
-    delay(100);   
-    MPU6050_enablemagnetometer();
-    delay(100);
-    
+    delay(100); 
+    MPU6050_WriteBit(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_INT_PIN_CFG, 4, ENABLE);
+    //delay(100); 
+    MPU6050_WriteBit(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_INT_ENABLE, 0, ENABLE);
+    //delay(100);  
+    //MPU6050_WriteBits(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_SIGNAL_PATH_RESET, 2, 3, 0x07);
+    //delay(100);
 
+    //MPU6050_enablemagnetometer();
+    //delay(100);
+
+   
+ // MPU6050_WriteByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_PWR_MGMT_1, 1<<7);//reset the whole module first
+/*    MPU6050_WriteBit(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_DEVICE_RESET_BIT, DISABLE);
+    delay(50);  //wait for 50ms for the gyro to stable
+
+    MPU6050_WriteByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_PWR_MGMT_1, MPU6050_CLOCK_PLL_ZGYRO);//PLL with Z axis gyroscope reference
+    MPU6050_WriteByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_CONFIG, 0x00);  //DLPF_CFG = 0: Fs=8khz; bandwidth=256hz
+    
+    MPU6050_WriteByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_SMPLRT_DIV, 0x00);  //1000Hz sample rate ~ 2ms
+ 
+    MPU6050_WriteByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_GYRO_CONFIG, MPU6050_GYRO_FS_2000); //Gyro full scale setting
+ 
+    MPU6050_WriteByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_ACCEL_CONFIG, MPU6050_ACCEL_FS_16); //Accel full scale setting
+ 
+    MPU6050_WriteByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_INT_PIN_CFG, 1<<4); //interrupt status bits are cleared on any read operation
+ 
+    MPU6050_WriteByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_INT_ENABLE, 1<<0);  //interupt occurs when data is ready. The interupt routine is in the receiver.c file.
+ 
+    MPU6050_WriteByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_SIGNAL_PATH_RESET, 0x07);//reset gyro and accel sensor
+    
+*/    
 }
+
+void MPU6050_WriteByte(uint8_t slaveAddr, uint8_t regAddr, uint8_t data)
+{
+    uint8_t tmp;  
+    tmp = data;
+    MPU6050_I2C_ByteWrite(slaveAddr,&tmp,regAddr);  
+}
+//------------------------------------------------------------------
+
 
 bool MPU6050_check_bit_status (uint8_t regAddr,uint8_t bitNum) 
 {
@@ -455,39 +496,37 @@ void MPU6050_I2C_Init()
 * @param  writeAddr : address of the register in which the data will be written
 * @return None
 */
+
+
 void MPU6050_I2C_ByteWrite(u8 slaveAddr, u8* pBuffer, u8 writeAddr)
 {
-//  ENTR_CRT_SECTION();
-
-  /* Send START condition */
-  I2C_GenerateSTART(MPU6050_I2C, ENABLE);
-
-  /* Test on EV5 and clear it */
-  while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_MODE_SELECT));
-
-  /* Send MPU6050 address for write */
-  I2C_Send7bitAddress(MPU6050_I2C, slaveAddr, I2C_Direction_Transmitter);
-
-  /* Test on EV6 and clear it */
-  while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));
-
-  /* Send the MPU6050's internal address to write to */
-  I2C_SendData(MPU6050_I2C, writeAddr);
-
-  /* Test on EV8 and clear it */
-  while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
+ 
+/* Send START condition */
+I2C_GenerateSTART(MPU6050_I2C, ENABLE);
+/* Test on EV5 and clear it */
+while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_MODE_SELECT));
+/* Send MPU6050 address for write */
+I2C_Send7bitAddress(MPU6050_I2C, slaveAddr, I2C_Direction_Transmitter);
+/* Test on EV6 and clear it */
+while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));
+/* Send the MPU6050's internal address to write to */
+I2C_SendData(MPU6050_I2C, writeAddr);
+/* Test on EV8 and clear it */
+//while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_BYTE_TRANSMITTING));
+/* Send the byte to be written */
+//if (*pBuffer!=0) I2C_SendData(MPU6050_I2C, *pBuffer);
+  
+/* Test on EV8 and clear it */
+while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
 
   /* Send the byte to be written */
-  I2C_SendData(MPU6050_I2C, *pBuffer);
+I2C_SendData(MPU6050_I2C, *pBuffer);
 
-  /* Test on EV8 and clear it */
-  while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
-
-  /* Send STOP condition */
-  I2C_GenerateSTOP(MPU6050_I2C, ENABLE);
-
- // EXT_CRT_SECTION();
-
+/* Test on EV8_2 and clear it */
+while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
+/* Send STOP condition */
+I2C_GenerateSTOP(MPU6050_I2C, ENABLE);
+ 
 }
 
 /**
@@ -573,3 +612,58 @@ void MPU6050_I2C_BufferRead(u8 slaveAddr, u8* pBuffer, u8 readAddr, u16 NumByteT
 /**
  * @}
  */ /* end of group MPU6050_Library */
+
+
+void I2C_DMA_Read(u8 slaveAddr, u8 readAddr)
+{
+/* Disable DMA channel*/
+DMA_Cmd(DMA1_Channel7, DISABLE);
+/* Set current data number again to 14 for MPu6050, only possible after disabling the DMA channel */
+DMA_SetCurrDataCounter(DMA1_Channel7, 14);
+ 
+/* While the bus is busy */
+while(I2C_GetFlagStatus(MPU6050_I2C, I2C_FLAG_BUSY));
+ 
+/* Enable DMA NACK automatic generation */
+I2C_DMALastTransferCmd(MPU6050_I2C, ENABLE);  //Note this one, very important
+ 
+/* Send START condition */
+I2C_GenerateSTART(MPU6050_I2C, ENABLE);
+ 
+/* Test on EV5 and clear it */
+while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_MODE_SELECT));
+ 
+/* Send MPU6050 address for write */
+I2C_Send7bitAddress(MPU6050_I2C, slaveAddr, I2C_Direction_Transmitter);
+ 
+/* Test on EV6 and clear it */
+while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));
+ 
+/* Clear EV6 by setting again the PE bit */
+I2C_Cmd(MPU6050_I2C, ENABLE);
+ 
+/* Send the MPU6050's internal address to write to */
+I2C_SendData(MPU6050_I2C, readAddr);
+ 
+/* Test on EV8 and clear it */
+while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
+ 
+/* Send STRAT condition a second time */
+I2C_GenerateSTART(MPU6050_I2C, ENABLE);
+ 
+/* Test on EV5 and clear it */
+while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_MODE_SELECT));
+ 
+/* Send MPU6050 address for read */
+I2C_Send7bitAddress(MPU6050_I2C, slaveAddr, I2C_Direction_Receiver);
+ 
+/* Test on EV6 and clear it */
+while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED));
+ 
+/* Start DMA to receive data from I2C */
+DMA_Cmd(DMA1_Channel7, ENABLE);
+I2C_DMACmd(MPU6050_I2C, ENABLE);
+ 
+// When the data transmission is complete, it will automatically jump to DMA interrupt routine to finish the rest.
+//now go back to the main routine
+}

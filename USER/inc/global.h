@@ -30,8 +30,9 @@ extern  sensor_gyro		gyr9150;
 extern  u8   			initial_flag;
 /*rpm*/
 extern  bool   			exti_flag;
+extern  int16_t 		systic_count;
 extern  int16_t 		exti_count;
-extern  float			rpm;
+extern  int16_t			rpm;
 
 /*DMA*/
 /*usart*/

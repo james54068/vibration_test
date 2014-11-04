@@ -32,22 +32,24 @@ void EXTI2_IRQHandler(void)
 {
    	if(EXTI_GetITStatus(EXTI_Line2) != RESET)
   	{
-  		rpm = rpm_calculation(exti_count);
+  		rpm = rpm_calculation(systic_count,exti_count);
 
   		if (rpm>10000)
   			rpm = 10000;
   		else if (rpm < 1000)
   			rpm = 1000;
   		
-  		exti_count = 0;
+  		systic_count = 0;
+      exti_count = 0;
+      //gpio_toggle( GPIOB, GPIO_Pin_8);
   			
 	EXTI_ClearITPendingBit(EXTI_Line2); 
   	} 
 }
 
-float rpm_calculation(int16_t count)
+int16_t rpm_calculation(int16_t systic_count,int16_t exti_count)
 {
-	float second = count * 0.001;
+	float second = systic_count * 0.000001 + exti_count * 0.0001;
  	return 60.0/second;
 
 }
@@ -57,9 +59,8 @@ void EXTI4_IRQHandler(void)
 
 if (EXTI_GetITStatus(EXTI_Line4) != RESET)     //MPU6050_INT
 {
-  
+  exti_count++;
   I2C_DMA_Read(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_ACCEL_XOUT_H);
-
   EXTI_ClearITPendingBit(EXTI_Line4);
   }
 }

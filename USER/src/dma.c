@@ -79,7 +79,7 @@ void DMA1_Channel7_IRQHandler(void)
     I2C_GenerateSTOP(MPU6050_I2C, ENABLE);
     /* Disable DMA channel*/
     DMA_Cmd(DMA1_Channel7, DISABLE);
- 
+
     //Read Accel data from byte 0 to byte 2
     for(i=0; i<3; i++)
     mpu9150_buf.buff[i]=((s16)((u16)I2C1_Rx_Buffer[2*i] << 8) + I2C1_Rx_Buffer[2*i+1]);

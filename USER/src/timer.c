@@ -28,7 +28,7 @@ void TIM4_IRQHandler(void)
 	int i=0;
 	if(TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) 
 	{	
-		gpio_toggle( GPIOB, GPIO_Pin_8);
+		//gpio_toggle( GPIOB, GPIO_Pin_8);
 		
 		mpu_9150_data();
 
@@ -44,13 +44,13 @@ void TIM4_IRQHandler(void)
 		strcat(string,buff);
 		sprintf(buff,"%f  ",acc9150.z);
 		strcat(string,buff);
-		sprintf(buff,"%f  ",rpm);
+		sprintf(buff,"%d  ",rpm);
 		strcat(string,buff);
 		strcat(string,"\r\n");
 
 		send_string(string);	
 		memset(string,0,100);
-		gpio_toggle( GPIOB, GPIO_Pin_8);	  			
+		//gpio_toggle( GPIOB, GPIO_Pin_8);	  			
 		
 		TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
 	}
